@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from pydantic import BaseModel
 from deep_translator import GoogleTranslator
 from typing import Dict, List, Optional
@@ -19,6 +19,11 @@ class TranslationResponse(BaseModel):
     source_language: str
     target_language: str
     detected_language: Optional[str] = None
+
+@app.get("/")
+async def root():
+    """Root endpoint that returns a welcome message"""
+    return Response(content="Welcome to the Translation Microservice API!", media_type="text/plain")
 
 @app.get("/languages", response_model=Dict[str, str])
 async def get_supported_languages():
@@ -60,6 +65,6 @@ async def translate_text(request: TranslationRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000)
 
 
