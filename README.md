@@ -2,7 +2,7 @@
 
 A FastAPI-based microservice for translating text between different languages using Google Translate.
 
-## Setup
+## Local Setup
 
 1. Create a virtual environment:
 
@@ -30,7 +30,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Running the Service
+## Running the Service Locally
 
 Start the service with:
 
@@ -39,6 +39,38 @@ python main.py
 ```
 
 The service will be available at `http://localhost:8000`
+
+## Deployment
+
+This project is set up for automatic deployment using GitHub Actions and Docker. The deployment pipeline:
+
+1. Builds a Docker image
+2. Pushes the image to Docker Hub
+3. Deploys the container to an AWS EC2 instance
+
+### Required GitHub Secrets
+
+Set up these secrets in your GitHub repository:
+
+- `DOCKER_HUB_USERNAME`: Your Docker Hub username
+- `DOCKER_HUB_PASSWORD`: Your Docker Hub password
+- `SERVER_URL`: URL for the server (e.g., http://localhost:8000)
+
+### Manual Deployment
+
+To manually deploy the service:
+
+1. Build the Docker image:
+
+```bash
+docker build -t rajataha/fyp-python-microservice .
+```
+
+2. Run the container:
+
+```bash
+docker run -d -p 5000:8000 --name fyp-python-microservice-container -e PORT=8000 -e HOST=0.0.0.0 -e SERVER_URL='http://localhost:8000' rajataha/fyp-python-microservice
+```
 
 ## API Endpoints
 
@@ -69,6 +101,13 @@ The service will be available at `http://localhost:8000`
   "target_language": "es"
 }
 ```
+
+### 3. Transcribe Audio
+
+- **POST** `/transcribe`
+- Form data:
+  - `audio`: Audio file
+  - `target_lang`: Target language code
 
 ## API Documentation
 

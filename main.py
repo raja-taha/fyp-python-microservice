@@ -174,7 +174,7 @@ async def transcribe(audio: UploadFile = File(...), target_lang: str = Form(...)
                 logger.info(f"Calling /translate API to translate text to {target_lang}")
                 
                 # Determine the base URL (same as the current server)
-                server_url = "http://127.0.0.1:8000"  # Default to localhost
+                server_url = os.environ.get("SERVER_URL", "http://localhost:8000")
                 
                 # Prepare the request payload
                 translation_payload = {
@@ -217,6 +217,8 @@ async def transcribe(audio: UploadFile = File(...), target_lang: str = Form(...)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    host = os.environ.get("HOST", "0.0.0.0")
+    uvicorn.run(app, host=host, port=port)
 
 
